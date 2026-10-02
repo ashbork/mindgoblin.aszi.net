@@ -1,0 +1,1055 @@
+/* Rosé Pine Moon — https://rosepinetheme.com/palette */
+:root {
+  color-scheme: dark;
+  --base: #232136;
+  --surface: #2a273f;
+  --overlay: #393552;
+  --muted: #6e6a86;
+  --subtle: #908caa;
+  --text: #e0def4;
+  --love: #eb6f92;
+  --gold: #f6c177;
+  --rose: #ea9a97;
+  --pine: #3e8fb0;
+  --foam: #9ccfd8;
+  --iris: #c4a7e7;
+  --hl-low: #2a283e;
+  --hl-med: #44415a;
+  --hl-high: #56526e;
+  --card-shadow: 0 7px 14px -7px rgb(0 0 0 / 0.65);
+  --card-radius: 4.5% / 3.23%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--base);
+  color: var(--text);
+  font:
+    13px/1.55 "JetBrains Mono",
+    ui-monospace,
+    monospace;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+button:hover {
+  color: var(--text);
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 1px solid var(--foam);
+  outline-offset: 2px;
+}
+
+kbd {
+  font: inherit;
+  color: var(--muted);
+  border: 1px solid var(--hl-high);
+  border-radius: 3px;
+  padding: 0 4px;
+}
+
+/* keyboard hints for keyboards, ↻ for touch screens (and anything phone-sized, where hints won't fit). */
+.for-touch {
+  display: none;
+}
+@media (hover: none), (pointer: coarse), (max-width: 560px) {
+  .for-keys {
+    display: none !important;
+  }
+  .for-touch {
+    display: inline;
+  }
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 22px;
+  background: var(--base);
+}
+
+.topbar h1 {
+  margin: 0 auto 0 0;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--iris);
+}
+.topbar nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--subtle);
+}
+.modes {
+  display: flex;
+  gap: 4px;
+}
+.modes button,
+.topbar nav > button {
+  padding: 1px 8px;
+}
+.modes button[aria-pressed="true"] {
+  color: var(--base);
+  background: var(--foam);
+}
+.topbar .check {
+  white-space: pre;
+  color: var(--text);
+  margin-left: 8px;
+}
+.roll {
+  color: var(--love);
+  font-weight: 600;
+}
+.roll:hover {
+  color: var(--rose);
+}
+
+main {
+  flex: 1;
+}
+
+main.solo {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 18px 22px 32px;
+}
+
+main.pod {
+  width: 100%;
+  /* fit two rows of seats on one screen. Magic numbers :) */
+  max-width: clamp(600px, calc((100dvh - 300px) * 2.154 + 168px), 1280px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: center;
+  gap: 8px;
+  padding: 0 8px 8px;
+}
+
+.pod .seat {
+  min-width: 0;
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 14px 20px 22px;
+}
+
+.pod .seat.first {
+  background: color-mix(in srgb, var(--pine) 22%, var(--surface));
+}
+.pod.table .seat.top {
+  rotate: 180deg;
+}
+
+.seat-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.seat-number {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.first .seat-number,
+.first-mark {
+  color: var(--foam);
+}
+
+.reroll {
+  margin-left: auto;
+  color: var(--muted);
+}
+
+.sheets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 26px;
+}
+
+.pod .sheets {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* random-seeming tilts for a natural look */
+.sheet {
+  transform: rotate(var(--tilt, 0deg)) translateY(var(--offset, 0px));
+}
+
+/* face down, then flipped one step after the previous card. */
+.sheet-image {
+  display: block;
+  perspective: 900px;
+}
+
+.flipper {
+  position: relative;
+  transform-style: preserve-3d;
+  animation: flip 0.55s cubic-bezier(0.3, 0.7, 0.4, 1.15) var(--deal-delay, 0ms)
+    backwards;
+}
+
+@keyframes flip {
+  0% {
+    transform: translateY(14px) rotateY(180deg) scale(0.94);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.face,
+.card-back {
+  display: block;
+  width: 100%;
+  aspect-ratio: 488 / 680;
+  border-radius: var(--card-radius);
+  backface-visibility: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.face {
+  object-fit: cover;
+  background-color: var(--overlay);
+}
+
+.card-back {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transform: rotateY(180deg);
+  border: 3px solid var(--overlay);
+  background: repeating-linear-gradient(
+    45deg,
+    var(--surface) 0 7px,
+    var(--hl-med) 7px 14px
+  );
+}
+
+.card-back::after {
+  content: "✦";
+  color: var(--iris);
+  font-size: 1.6rem;
+}
+
+.best-sticker {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 9px 0 0;
+  color: var(--subtle);
+  white-space: nowrap;
+  /* Hidden until the card has flipped, so face-down cards don't spoil the roll. */
+  animation: reveal 0.25s ease-out calc(var(--deal-delay, 0ms) + 0.4s) backwards;
+}
+
+.best-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mana {
+  color: var(--text);
+  font-weight: 600;
+}
+/* Rare finishes: a symbol before the sticker name, each in its own colour. */
+.finish {
+  font-weight: 600;
+}
+.finish-foil {
+  color: var(--gold);
+}
+.finish-holo {
+  color: var(--iris);
+}
+.finish-etched {
+  color: var(--foam);
+}
+.finish-galaxy {
+  color: var(--rose);
+}
+.finish-miscut {
+  color: var(--subtle);
+}
+
+.mana i {
+  color: var(--love);
+  font-style: normal;
+}
+
+.max {
+  color: var(--base);
+  background: var(--gold);
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/*
+ * Jackpot: the sheet hit the pool's top r. Once it has flipped (0.55s after its deal delay):
+ *   1. a rainbow foil glint sweeps across it once;
+ *   2. its seat warms towards gold, then settles back;
+ *   3. the status line's "top" segment turns gold.
+ * The gold edge, gold caption and max tag stay afterwards so the jackpot is still findable, but
+ * only arrive as it lands: shown any earlier, they'd give the roll away mid-flip.
+ */
+.sheet.jackpot .best-name,
+.sheet.jackpot .mana {
+  color: var(--gold);
+}
+.sheet.jackpot .best-name {
+  animation: gild-name 0.4s ease-out calc(var(--deal-delay, 0ms) + 0.65s)
+    backwards;
+}
+.sheet.jackpot .mana {
+  animation: gild-mana 0.4s ease-out calc(var(--deal-delay, 0ms) + 0.65s)
+    backwards;
+}
+.sheet.jackpot .max {
+  animation: reveal 0.3s ease-out calc(var(--deal-delay, 0ms) + 0.75s) backwards;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes gild-name {
+  from {
+    color: var(--subtle);
+  }
+}
+@keyframes gild-mana {
+  from {
+    color: var(--text);
+  }
+}
+
+.sheet.jackpot .face {
+  box-shadow:
+    0 0 0 2px var(--gold),
+    0 14px 22px -10px rgb(0 0 0 / 0.75);
+  animation: gild-edge 0.45s ease-out calc(var(--deal-delay, 0ms) + 0.65s)
+    backwards;
+}
+@keyframes gild-edge {
+  from {
+    box-shadow:
+      0 0 0 0 transparent,
+      var(--card-shadow);
+  }
+}
+
+.glint {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  pointer-events: none;
+  background: linear-gradient(
+      115deg,
+      transparent 37%,
+      color-mix(in srgb, var(--love) 70%, transparent) 41%,
+      color-mix(in srgb, var(--gold) 70%, transparent) 45%,
+      rgb(255 250 240 / 0.8) 50%,
+      color-mix(in srgb, var(--foam) 70%, transparent) 54.5%,
+      color-mix(in srgb, var(--pine) 65%, transparent) 58%,
+      color-mix(in srgb, var(--iris) 70%, transparent) 61%,
+      transparent 64%
+    )
+    no-repeat;
+  background-size: 200% 100%;
+  background-position: 180% 0;
+  mix-blend-mode: screen;
+  animation: glint 0.9s cubic-bezier(0.4, 0, 0.6, 1)
+    calc(var(--deal-delay, 0ms) + 0.7s) both;
+}
+
+@keyframes glint {
+  from {
+    background-position: 180% 0;
+  }
+  to {
+    background-position: -78% 0;
+  }
+}
+
+.sheet-image {
+  position: relative;
+}
+
+.pod .seat.hit {
+  animation: warm 1.8s ease-out calc(var(--hit-delay, 0ms) + 0.6s);
+}
+@keyframes warm {
+  0% {
+    box-shadow: inset 0 0 0 0 transparent;
+  }
+  25% {
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--gold) 70%, transparent),
+      inset 0 0 90px 0 color-mix(in srgb, var(--gold) 32%, transparent);
+  }
+  100% {
+    box-shadow: inset 0 0 0 0 transparent;
+  }
+}
+
+/* finish treatments. Each is a layer over the card (outside the 3D flipper, like the glint), faded in once the card has flipped so it never sits over the card back or gives the roll away mid-flip. */
+.sheet-image {
+  container-type: inline-size;
+}
+
+.finish-fx {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  --fx-reveal: reveal 0.35s ease-out calc(var(--deal-delay, 0ms) + 0.5s)
+    backwards;
+  animation: var(--fx-reveal);
+}
+@keyframes drift {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+/* foil: a soft gloss drifting slowly across the card. */
+.fx-foil {
+  background: linear-gradient(
+    125deg,
+    transparent 20%,
+    rgb(255 255 255 / 0.22) 34%,
+    transparent 46%,
+    rgb(255 255 255 / 0.12) 64%,
+    transparent 78%
+  );
+  background-size: 300% 300%;
+  animation:
+    var(--fx-reveal),
+    drift 7s ease-in-out infinite alternate;
+}
+
+/* holo: faint rainbow bands that slowly shift. */
+.fx-holo {
+  background: repeating-linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--love) 22%, transparent) 0 5%,
+    color-mix(in srgb, var(--gold) 22%, transparent) 5% 10%,
+    color-mix(in srgb, var(--foam) 22%, transparent) 10% 15%,
+    color-mix(in srgb, var(--pine) 22%, transparent) 15% 20%,
+    color-mix(in srgb, var(--iris) 22%, transparent) 20% 25%
+  );
+  background-size: 200% 200%;
+  animation:
+    var(--fx-reveal),
+    drift 9s linear infinite alternate;
+}
+
+/* etched foil: rough and grainy like real etched cards, a fine metal grain over horizontal brush strokes, strongest on the frame and fading over the art, with a cool sheen drifting across. */
+.fx-etched {
+  background:
+    linear-gradient(
+      120deg,
+      transparent 30%,
+      rgb(220 232 255 / 0.22) 50%,
+      transparent 70%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.3 -0.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.03 0.22' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.7 -0.32'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size:
+    250% 250%,
+    80px 80px,
+    160px 160px;
+  backdrop-filter: saturate(0.7) contrast(1.06);
+  /* Frame-heavy: the texture fades out over the middle of the art. */
+  mask-image: radial-gradient(
+    ellipse 62% 48% at 50% 36%,
+    rgb(0 0 0 / 0.3) 55%,
+    #000 100%
+  );
+  animation:
+    var(--fx-reveal),
+    etched-sheen 8s ease-in-out infinite alternate;
+}
+@keyframes etched-sheen {
+  from {
+    background-position:
+      0% 0%,
+      0 0,
+      0 0;
+  }
+  to {
+    background-position:
+      100% 100%,
+      0 0,
+      0 0;
+  }
+}
+
+/* Galaxy foil: a faint nebula with two layers of four-pointed sparkles twinkling out of step. Sparkles
+   rather than round dots, which just read as more of the stars already printed in the sheets' art. */
+.fx-galaxy {
+  --sparkle-warm: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0C10.8 7 13 9.2 20 10C13 10.8 10.8 13 10 20C9.2 13 7 10.8 0 10C7 9.2 9.2 7 10 0Z' fill='%23fffbea'/%3E%3C/svg%3E");
+  --sparkle-cool: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0C10.8 7 13 9.2 20 10C13 10.8 10.8 13 10 20C9.2 13 7 10.8 0 10C7 9.2 9.2 7 10 0Z' fill='%23c4a7e7'/%3E%3C/svg%3E");
+  background:
+    radial-gradient(
+      ellipse at 28% 22%,
+      color-mix(in srgb, var(--iris) 22%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 74% 78%,
+      color-mix(in srgb, var(--rose) 18%, transparent),
+      transparent 50%
+    );
+}
+
+.fx-galaxy::before,
+.fx-galaxy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.fx-galaxy::before {
+  background-image:
+    var(--sparkle-warm), var(--sparkle-warm), var(--sparkle-warm),
+    var(--sparkle-warm), var(--sparkle-warm), var(--sparkle-warm),
+    var(--sparkle-warm), var(--sparkle-warm), var(--sparkle-warm);
+  background-position:
+    12% 14%,
+    38% 7%,
+    81% 19%,
+    63% 36%,
+    22% 47%,
+    90% 55%,
+    47% 68%,
+    8% 83%,
+    71% 91%;
+  background-size:
+    7cqi 7cqi,
+    5cqi 5cqi,
+    8cqi 8cqi,
+    5cqi 5cqi,
+    6cqi 6cqi,
+    5cqi 5cqi,
+    8cqi 8cqi,
+    5cqi 5cqi,
+    6cqi 6cqi;
+  background-repeat: no-repeat;
+  animation: twinkle 2.6s ease-in-out infinite alternate;
+}
+.fx-galaxy::after {
+  background-image:
+    var(--sparkle-cool), var(--sparkle-cool), var(--sparkle-cool),
+    var(--sparkle-cool), var(--sparkle-cool), var(--sparkle-cool),
+    var(--sparkle-cool), var(--sparkle-cool);
+  background-position:
+    27% 26%,
+    55% 16%,
+    93% 33%,
+    40% 52%,
+    76% 62%,
+    16% 66%,
+    58% 84%,
+    33% 94%;
+  background-size:
+    5cqi 5cqi,
+    6cqi 6cqi,
+    5cqi 5cqi,
+    5cqi 5cqi,
+    7cqi 7cqi,
+    6cqi 6cqi,
+    5cqi 5cqi,
+    6cqi 6cqi;
+  background-repeat: no-repeat;
+  animation: twinkle 3.3s ease-in-out 1.1s infinite alternate-reverse;
+}
+@keyframes twinkle {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* miscut: the card printed off-centre, so the next card on the sheet peeks in along two edges. */
+.face.miscut {
+  background-size: 100% 100%;
+  background-repeat: repeat;
+  background-position: 6cqi 4cqi;
+}
+
+/* shout-outs for super-rare combinations (see shouts.ts): a label in the seat header and the status line, plus a border round the seat, louder the rarer it is. All wait for the last card involved. */
+.shout {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  animation: reveal 0.4s ease-out calc(var(--shout-delay, 0ms) + 0.6s) backwards;
+}
+.solo-shout {
+  margin: 0 0 12px;
+}
+
+.shout-text-rare {
+  color: var(--gold);
+}
+
+.shout-text-mythic,
+.shout-text-legendary {
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.shout-text-mythic {
+  background-image: linear-gradient(
+    90deg,
+    var(--iris),
+    var(--rose),
+    var(--iris)
+  );
+}
+
+.shout-text-legendary {
+  background-image: linear-gradient(
+    90deg,
+    var(--love),
+    var(--gold),
+    var(--foam),
+    var(--iris),
+    var(--love)
+  );
+  background-size: 200% 100%;
+  animation:
+    reveal 0.4s ease-out calc(var(--shout-delay, 0ms) + 0.6s) backwards,
+    shimmer 2.4s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+.status-shout {
+  padding: 0 6px;
+  font-weight: 800;
+  animation: reveal 0.4s ease-out calc(var(--hit-delay, 0ms) + 0.6s) backwards;
+}
+
+.status-shout.shout-text-legendary {
+  animation:
+    reveal 0.4s ease-out calc(var(--hit-delay, 0ms) + 0.6s) backwards,
+    shimmer 2.4s linear infinite;
+}
+
+/* The seat's border: gold for rare, iris and rose for mythic, a rainbow circling it for legendary. */
+@property --shout-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.pod .seat[class*="shout-"] {
+  position: relative;
+}
+
+.pod .seat[class*="shout-"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: reveal 0.5s ease-out calc(var(--shout-delay, 0ms) + 0.6s) backwards;
+}
+
+.pod .seat.shout-rare::before {
+  background: color-mix(in srgb, var(--gold) 70%, transparent);
+  padding: 1px;
+}
+
+.pod .seat.shout-mythic::before {
+  background: linear-gradient(135deg, var(--iris), var(--rose), var(--iris));
+}
+
+.pod .seat.shout-legendary::before {
+  background: conic-gradient(
+    from var(--shout-angle),
+    var(--love),
+    var(--gold),
+    var(--foam),
+    var(--pine),
+    var(--iris),
+    var(--love)
+  );
+  animation:
+    reveal 0.5s ease-out calc(var(--shout-delay, 0ms) + 0.6s) backwards,
+    circle-round 3s linear infinite;
+}
+
+@keyframes circle-round {
+  to {
+    --shout-angle: 360deg;
+  }
+}
+
+/* phones: the seat shows the shout-out; the status line has no room for it. */
+@media (max-width: 560px) {
+  .status-shout {
+    display: none;
+  }
+  .seat-head {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+  .seat-head .shout {
+    order: 3;
+    flex-basis: 100%;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finish-fx,
+  .fx-galaxy::before,
+  .fx-galaxy::after,
+  .shout,
+  .status-shout,
+  .pod .seat[class*="shout-"]::before {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipper,
+  .best-sticker,
+  .sheet.jackpot *,
+  .glint,
+  .pod .seat.hit,
+  .status .top {
+    animation: none;
+  }
+  .glint {
+    display: none;
+  }
+}
+
+.empty {
+  color: var(--muted);
+  margin: 0;
+}
+main > .empty {
+  padding: 18px 22px;
+}
+
+/* status line */
+
+.status {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 3px 14px 3px 0;
+  background: var(--surface);
+  color: var(--subtle);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.status .mode {
+  padding: 0 10px;
+  background: var(--rose);
+  color: var(--base);
+  font-weight: 800;
+}
+.status .spacer {
+  flex: 1;
+}
+.status .hints kbd {
+  border: 0;
+  padding: 0;
+  margin-left: 8px;
+  color: var(--text);
+}
+.status .pool {
+  white-space: pre;
+}
+.status .top {
+  padding: 0 6px;
+}
+.status .top.maxed {
+  background: var(--gold);
+  color: var(--base);
+  font-weight: 600;
+  animation: gild-status 0.35s ease-out calc(var(--hit-delay, 0ms) + 0.65s)
+    backwards;
+}
+@keyframes gild-status {
+  from {
+    background: transparent;
+    color: var(--subtle);
+  }
+}
+.status .ok {
+  color: var(--foam);
+}
+.status .off {
+  color: var(--muted);
+}
+
+/* settings */
+
+dialog {
+  width: min(560px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1px solid var(--hl-med);
+  border-radius: 8px;
+  background: var(--base);
+  color: var(--text);
+}
+dialog::backdrop {
+  background: rgb(18 17 28 / 0.7);
+}
+dialog form {
+  padding: 16px 20px 20px;
+}
+
+.settings-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.settings-head h2 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 600;
+  color: var(--iris);
+}
+.settings-head h2::before {
+  content: "~/sticker-roller/";
+  color: var(--muted);
+  font-weight: 400;
+}
+.settings-head button {
+  color: var(--subtle);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 0;
+  color: var(--subtle);
+}
+.field input {
+  width: 4.5rem;
+  font: inherit;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--hl-med);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.pool-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-top: 1px dashed var(--hl-med);
+  padding-top: 12px;
+}
+.pool-head h3 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 600;
+}
+.pool-count {
+  color: var(--muted);
+  font-weight: 400;
+}
+.pool-actions {
+  display: flex;
+  gap: 14px;
+}
+.pool-actions button {
+  color: var(--foam);
+}
+.hint {
+  margin: 4px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.warning {
+  margin: 4px 0 8px;
+  color: var(--gold);
+}
+
+.pool-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pool-list label {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--subtle);
+}
+.pool-list label:hover {
+  background: var(--surface);
+}
+.pool-list input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.pool-list input:focus-visible + .box {
+  outline: 1px solid var(--foam);
+  outline-offset: 1px;
+}
+.pool-list .box {
+  white-space: pre;
+  color: var(--muted);
+}
+.pool-list .checked {
+  color: var(--text);
+}
+.pool-list .checked .box {
+  color: var(--foam);
+}
+.pool-name {
+  flex: 1;
+}
+
+/* mobile adaptations */
+
+@media (max-width: 560px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 10px 12px;
+  }
+  .topbar h1 {
+    flex: 1;
+  }
+  .topbar nav {
+    order: 3;
+    flex-basis: 100%;
+    margin-left: -8px;
+  }
+
+  main.solo {
+    padding: 10px 12px 20px;
+  }
+  main.pod {
+    gap: 6px;
+    padding: 0 6px 6px;
+  }
+  .pod .seat {
+    padding: 8px 10px 12px;
+    border-radius: 10px;
+  }
+  .seat-head {
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+
+  .sheets {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .pod .sheets {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+  .sheet {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+  }
+  /* rows sit tightly here, so keep the tilt but drop the up/down offset that would make them touch. */
+  .pod .sheet {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 8px;
+    transform: rotate(var(--tilt, 0deg));
+  }
+  .pod .card-back {
+    border-width: 2px;
+  }
+  .pod .card-back::after {
+    font-size: 0.9rem;
+  }
+  .best-sticker {
+    margin: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    white-space: normal;
+  }
+  .pod .best-sticker {
+    font-size: 11px;
+  }
+  .pod .max {
+    display: none;
+  }
+
+  .status {
+    font-size: 11px;
+    gap: 12px;
+  }
+  .status .label,
+  .pod ~ .status .pool-info {
+    display: none;
+  }
+}
